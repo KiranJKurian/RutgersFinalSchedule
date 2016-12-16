@@ -1,6 +1,8 @@
 import urllib
 import urllib2
 from bs4 import BeautifulSoup
+from dateutil.parser import parse
+import sys
 
 def get_redirected_url(url):
     opener = urllib2.build_opener(urllib2.HTTPRedirectHandler)
@@ -26,10 +28,13 @@ def getFinalDate(index):
 		dateIndexSplit = indexedDates[0]['date'].index(':')
 		date = indexedDates[0]['date'][:dateIndexSplit].strip()
 		times = indexedDates[0]['date'][dateIndexSplit + 1:].split('-')
-		return { 'date': date, 'startTime': times[0].strip(), 'endTime': times[1].strip() }
+		return { 'date': parse(date), 'startTime': parse("%s %s"%(date, times[0].strip())), 'endTime': parse("%s %s"%(date, times[1].strip())) }
 	return None
 
 if __name__ == "__main__":
-	prinProgFinal = getFinalDate("13150")
-	print prinProgFinal
+	if len(sys.argv) > 1:
+	    print getFinalDate(sys.argv[1])
+	else:
+		prinProgFinal = getFinalDate("13150")
+		print prinProgFinal
 
